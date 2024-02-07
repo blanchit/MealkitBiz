@@ -82,7 +82,7 @@
 	  </tr>
 	</table>
 	
-	<form action="salesOrder_insertForm.jsp" method="post">
+
 	
 	<div class="selecter">
 		<input type = "button" value="입력" onClick="location.href='salesOrder_insertForm.jsp'">
@@ -106,52 +106,55 @@
 		</tr>
 	  </thead>	
 	  </table>	
-
+	  
+	<form action="salesOrder_delete.jsp" method="post">
+	
 	  <table class="order2">
 		
-		<%
+	<%
+	try{
+		Class.forName("oracle.jdbc.driver.OracleDriver"); //driver
+		conn = DriverManager.getConnection("jdbc:oracle:thin:@1.220.247.78:1522:orcl", "semi_project1", "123451");
+		String sql = "SELECT ORDER_NUM , CUST_ID , CUST_NAME, PRODUCT_ID , PRODUCT_NAME , QUANTITY , ORDER_DATE , REQUST_DATE FROM SALES_ORDER ORDER BY ORDER_NUM DESC";
+		pstmt = conn.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		
+		while(rs.next()){ //조회되는 로우(행) 반복
+			out.print("<tr>");
+			out.print("<td>" + rs.getInt("order_num") + "</td>");
+			out.print("<td>" + rs.getInt("cust_id") + "</td>");
+			out.print("<td>" + rs.getString("cust_name") + "</td>");
+			out.print("<td>" + rs.getInt("product_id") + "</td>");
+			out.print("<td>" + rs.getString("product_name") + "</td>");
+			out.print("<td>" + rs.getInt("quantity") + "</td>");
+			out.print("<td>" + rs.getDate("order_date") + "</td>");
+			out.print("<td>" + rs.getDate("requst_date") + "</td>");
+			out.print("<td>"+"<button onClick='javascript: noticeDelete(" + rs.getInt("order_num") + ")'>삭제</td>");
+
+			out.print("</tr>");
+		}
+		
+		rs.close();
+		pstmt.close();
+		conn.close();
+	}catch(Exception e){
+		e.printStackTrace();
+	}finally{
 		try{
-			Class.forName("oracle.jdbc.driver.OracleDriver"); //driver
-			conn = DriverManager.getConnection("jdbc:oracle:thin:@1.220.247.78:1522:orcl", "semi_project1", "123451");
-			String sql = "SELECT ORDER_NUM , CUST_ID , CUST_NAME, PRODUCT_ID , PRODUCT_NAME , QUANTITY , ORDER_DATE , REQUST_DATE FROM SALES_ORDER ORDER BY ORDER_NUM DESC";
-			pstmt = conn.prepareStatement(sql);
-			rs = pstmt.executeQuery();
-			
-			while(rs.next()){ //조회되는 로우(행) 반복
-				out.print("<tr>");
-				out.print("<td>" + rs.getInt("order_num") + "</td>");
-				out.print("<td>" + rs.getInt("cust_id") + "</td>");
-				out.print("<td>" + rs.getString("cust_name") + "</td>");
-				out.print("<td>" + rs.getInt("product_id") + "</td>");
-				out.print("<td>" + rs.getString("product_name") + "</td>");
-				out.print("<td>" + rs.getInt("quantity") + "</td>");
-				out.print("<td>" + rs.getDate("order_date") + "</td>");
-				out.print("<td>" + rs.getDate("requst_date") + "</td>");
-				out.print("<td></td>");
-				out.print("</tr>");
-			}
-			
-			rs.close();
-			pstmt.close();
-			conn.close();
+			if(rs!=null) rs.close();
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
 		}catch(Exception e){
 			e.printStackTrace();
-		}finally{
-			try{
-				if(rs!=null) rs.close();
-				if(pstmt!=null) pstmt.close();
-				if(conn!=null) conn.close();
-			}catch(Exception e){
-				e.printStackTrace();
-			}
 		}
-		%>
-
-	  </table>
-
+	}
+	
+	%>
+	
+	  </table>	  
 
 	</form>
-			<!-- ============================================================================== -->
+<!-- ============================================================================== -->
 
 
 	<!-- footer 공통 부분 연결 -->
@@ -160,7 +163,16 @@
 	
 </div>
 </section>
-
-
+    <script>
+    	function searchText() {
+    		location.href = "./salesOrder_select.jsp?search=" + $('#search-text').val();
+    	}
+    	
+    	function noticeDelete(noticeNum) {
+    		if (confirm('정말 삭제하시겠습니까?')) {
+    			location.href = "./salesOrder_delete.jsp?order_num=" + noticeNum;
+    		}
+    	}
+    </script>
 </body>
 </html>

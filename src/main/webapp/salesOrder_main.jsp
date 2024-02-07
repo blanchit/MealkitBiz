@@ -58,7 +58,7 @@
 <!-- ================================================================================ -->
 
 	<div class="containerM">
-	  <div class="headerM"><h1>Sales order</h1></div>
+	  <div class="headerM"><h1>Sales order main</h1></div>
 	
 		<table class="responsible">
 		
@@ -176,4 +176,18 @@
 	<!-- footer 공통 부분 연결 -->
 	<%@ include file="footer.jsp" %>
 </body>
+
+<!-- 
+추가 개선 과제:
+ ① 기간별 조회 기능
+ ② 선택적 삭제 
+ ③ 재고자산 연동 (출고확인서 시스템 구성이 필요)
+    -> 주무서 작성 시 임시재고감소 -> 출고확인 시 실제재고 감소
+ ④ 입력일 
+ ⑤ 비고에 메모 DB에 기록될 수 있도록 연동
+ ⑥ 담당자 DB연동
+ ⑦ 입력이 되지 않으면 경고메시지
+ -->
+
+
 </html>
